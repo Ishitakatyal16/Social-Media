@@ -1,15 +1,15 @@
-       <link rel="stylesheet" href="/css/user_profile.css">
-        <h1>
-            Codeial / Profile Page
-        </h1>
-
+       <link rel="stylesheet" href="<%= assetPath('css/user_profile.css') %>">
+       
+       <img src="<%= user.avatar %>" alt="<%= user.name %>" width="100">
       
 
         <% if(user.id == profile_user.id){ %>
             <!-- if user matches then show the form -->
-            <form action="/users/update/<%= profile_user.id %>" method="POST">
+            <form action="/users/update/<%= profile_user.id %>" enctype="multipart/form-data" method="POST">
                 <input type="text" name="name" placeholder="Your Name" value="<%= profile_user.name %>" required>
                 <input type="email" name="email" placeholder="Your Email" value="<%= profile_user.email %>" required>
+                
+                <input type="file" name="avatar" placeholder="Profile Picture">
                 <input type="submit"  value="Update">
             </form>
             
@@ -18,3 +18,21 @@
             <p><%= profile_user.name %></p>
             <p><%= profile_user.email %></p>
         <%} %>
+
+        <p><%=profile_user.user_name%></p>
+        <% if(locals.user && profile_user.id!=user.id){%>
+            <% if(locals.user.friends.includes(profile_user.id)){%>
+                <a href="/users/togg-friend/?id=<%=profile_user.id%>" class="toggle-friend-button">Remove Friend</a>        
+            <%}else{%>
+                <a href="/users/togg-friend/?id=<%=profile_user.id%>" class="toggle-friend-button">Add Friend</a>        
+            <%}%>
+        <%}%>
+
+        <script src="<%= assetPath('js/friendship.js') %>"></script>
+
+        <script>
+            $('.toggle-friend-button').each(function(){
+                let self=this;
+                let toggleFriend=new ToggleFriend(self);
+            });
+        </script>
